@@ -1,7 +1,14 @@
-import time
 import random
+import string
 
-def display_hangman(turns_left):
+def generate_random_word(min_length=3, max_length=10):
+    """Generates a random word with a random length."""
+    length = random.randint(min_length, max_length)
+    word = ''.join(random.choices(string.ascii_lowercase, k=length))
+    return word
+
+def display_hangman(turns_left, max_turns):
+    """Displays the hangman based on remaining turns."""
     stages = [
         """
            -----
@@ -67,32 +74,28 @@ def display_hangman(turns_left):
         =========
         """
     ]
-    return stages[6 - turns_left]
+    index = max(0, len(stages) - 1 - int((len(stages) - 1) * (turns_left / max_turns)))
+    return stages[index]
 
 def hangman_game():
     print("Welcome to Hangman!")
-    time.sleep(1)
     name = input("Enter your name: ")
-    print(f"Hello, {name}! Get ready to play Hangman!")
-    time.sleep(1)
-    print("Here's how it works: You have 6 attempts to guess the correct word.")
-    time.sleep(1)
-
-    word_list = [
-        'expense', 'simultaneous', 'interceptor', 'gregarious', 
-        'juxtaposed', 'ambivert', 'orifice', 'algebra', 
-        'distortions', 'gynaecology', 'autonomous'
-    ]
-    word = random.choice(word_list)
+    print(f"Hello, {name}! Let's play a special version of Hangman!")
+    
+    # Generate a random word
+    word = generate_random_word()
+    max_turns = len(word) + 3  # Extra tries for longer words
     guesses = ''
-    turns = 6
+    turns = max_turns
 
-    print("\nLet's start guessing!\n")
+    print("\nGuess the random word!")
+    print(f"The word has {len(word)} letters. You have {turns} tries.\n")
+
     while turns > 0:
         failed = 0
         display_word = ''
 
-        # Build display for the current word
+        # Build the current display of the word
         for char in word:
             if char in guesses:
                 display_word += char
@@ -100,16 +103,15 @@ def hangman_game():
                 display_word += '_'
                 failed += 1
 
-        # Display the current state of the game
-        print(display_hangman(turns))
+        print(display_hangman(turns, max_turns))
         print("Word:", ' '.join(display_word))
 
         if failed == 0:
-            print(f"\nCongratulations, {name}! You've guessed the word correctly!")
-            print("🎉 Here's your reward: 🏆 $1,000,000 🏆 🎉")
+            print(f"\n🎉 Congratulations, {name}! You guessed the word: {word}")
+            print("Here's your virtual trophy 🏆!")
             break
 
-        # Player guesses a letter
+        # Player makes a guess
         guess = input("\nGuess a letter: ").lower()
 
         if len(guess) != 1 or not guess.isalpha():
@@ -125,11 +127,10 @@ def hangman_game():
         if guess not in word:
             turns -= 1
             print("\nWrong guess!")
-            print(f"You have {turns} turns left.")
+            print(f"Remaining tries: {turns}")
             if turns == 0:
-                print(display_hangman(turns))
-                print("You lose! The word was:", word)
-                print("Better luck next time!")
+                print(display_hangman(turns, max_turns))
+                print(f"You lose! The word was: {word}")
                 break
         else:
             print("\nGood guess!")
