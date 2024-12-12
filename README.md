@@ -11,6 +11,9 @@ A fun and interactive Python-based Hangman game with enhanced visuals and user e
 - **User-Friendly Prompts:** Clear and engaging messages guide you throughout the game.
 - **Reward System:** Celebrate your victory with a virtual prize.
 - **Simple & Fun:** Perfect for beginners and casual players to enjoy.
+- **Word Generation:** Random Word generation with dynamic lengths.
+- **No.of tries:** Tries adjusted based on the word size.
+- **Visuals:** Improved gameplay visuals.
 
 ---
 
